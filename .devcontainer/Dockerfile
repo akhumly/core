@@ -4,17 +4,17 @@ FROM mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm
 #Install NestJS CLI globally
 RUN npm install -g @nestjs/cli
 
-# Set the working directory 
-WORKDIR /workspaces/core/backend
-
 # Copy only package.json and package-lock.json to leverage Docker caching
-COPY package*.json ./
+COPY backend/package*.json ./backend
+
+# Set the working directory 
+#WORKDIR /backend
 
 # Install dependencies
-# RUN npm install
+#RUN npm install
 
 # Copy the rest of your application code to the container
-#COPY . .
+# COPY . .
 
 # Expose the NestJS default port (3000)
 EXPOSE 3000
