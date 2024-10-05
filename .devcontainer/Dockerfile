@@ -1,12 +1,21 @@
+# Base image for Node.js development from devcontainers
 FROM mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm
 
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+# Install NestJS CLI globally
+RUN npm install -g @nestjs/cli
 
-# [Optional] Uncomment if you want to install an additional version of node using nvm
-# ARG EXTRA_NODE_VERSION=10
-# RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install ${EXTRA_NODE_VERSION}"
+# Ensure the container uses the correct working directory
+WORKDIR /workspaces/${localWorkspaceFolderBasename}
 
-# [Optional] Uncomment if you want to install more global node modules
-# RUN su node -c "npm install -g <your-package-list-here>"
+# Install project dependencies (including NestJS-specific packages)
+COPY package*.json ./
+RUN npm install
+
+# Copy the rest of your application code into the container
+COPY . .
+
+# Expose the default NestJS port (if you plan to run it inside the container)
+EXPOSE 3000
+
+# Default command will be overridden by docker-compose.yml's 'command' if set.
+CMD ["npm", "run", "start:dev"]
