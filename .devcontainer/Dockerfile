@@ -1,21 +1,20 @@
-# Base image for Node.js development from devcontainers
+# Use a Node.js base image
 FROM mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm
 
-# Install NestJS CLI globally
-RUN npm install -g @nestjs/cli
+# Set the working directory to the 'backend' folder
+WORKDIR /workspaces/${localWorkspaceFolderBasename}/backend
 
-# Ensure the container uses the correct working directory
-WORKDIR /workspaces/${localWorkspaceFolderBasename}
+# Copy only package.json and package-lock.json to leverage Docker caching
+COPY backend/package*.json ./
 
-# Install project dependencies (including NestJS-specific packages)
-COPY package*.json ./
+# Install dependencies
 RUN npm install
 
-# Copy the rest of your application code into the container
-COPY . .
+# Copy the rest of your application code to the container
+COPY backend/ .
 
-# Expose the default NestJS port (if you plan to run it inside the container)
+# Expose the NestJS default port (3000)
 EXPOSE 3000
 
-# Default command will be overridden by docker-compose.yml's 'command' if set.
+# Default command (overwritten by docker-compose command)
 CMD ["npm", "run", "start:dev"]

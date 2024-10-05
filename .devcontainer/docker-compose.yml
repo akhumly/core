@@ -4,10 +4,12 @@ services:
   app:
     build: 
       context: .
-      dockerfile: Dockerfile
+      # dockerfile: Dockerfile
+      dockerfile: .devcontainer/Dockerfile
 
     volumes:
-      - ../..:/workspaces:cached
+      # - ../..:/workspaces:cached
+      - .:/workspaces/backend:cached  # Correct path to match the 'backend' folder
       
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
